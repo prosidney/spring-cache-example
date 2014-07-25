@@ -8,7 +8,7 @@ import com.springcacheexample.config.EnableCachingConfig;
 import com.springcacheexample.model.InfoResponse;
 import com.springcacheexample.model.Thing;
 import com.springcacheexample.model.ThingType;
-import com.springcacheexample.service.AnotherService;
+import com.springcacheexample.service.Service;
 
 public class SomeController {
 
@@ -18,7 +18,7 @@ public class SomeController {
 		ctx.register(EnableCachingConfig.class);
 		ctx.refresh();
 
-		AnotherService anotherService = ctx.getBean(AnotherService.class);
+		Service anotherService = ctx.getBean(Service.class);
 		
 		getMessage(anotherService);
 
@@ -26,21 +26,27 @@ public class SomeController {
 
 		getComments(anotherService);
 		
-		getMessage(anotherService);
-		
-		getComments(anotherService);
-		
-		changeSomething(anotherService, ThingType.COMMENT, "Message");
-		
-		getComments(anotherService);
+		Thing thing = new Thing();
+		thing.setType(ThingType.MESSAGE);
+		changeSomething(anotherService, thing, "new message");
 		
 		getMessage(anotherService);
 		
 		getComments(anotherService);
+
+		Thing thing1 = new Thing();
+		thing1.setType(ThingType.COMMENT);
+		changeSomething(anotherService, thing1, "new comment");
+		
+		getComments(anotherService);
 		
 		getMessage(anotherService);
 		
-		changeAlotOfThing(anotherService, ThingType.COMMENT);
+		getComments(anotherService);
+		
+		getMessage(anotherService);
+		
+		flush(anotherService);
 		
 		getComments(anotherService);
 		
@@ -51,23 +57,23 @@ public class SomeController {
 		getMessage(anotherService);	
 	}
 
-	private static void changeSomething(AnotherService anotherService, ThingType thingType, String content) {
-		System.out.println("change " + thingType);
-		InfoResponse infoResponse = anotherService.changeSomething(content, thingType);
+	private static void changeSomething(Service anotherService, Thing thing, String content) {
+		System.out.println("change " + thing.getType());
+		InfoResponse infoResponse = anotherService.changeSomething(content, thing);
 		
 		printResult(infoResponse);
 		
 		line();
 	}
 
-	private static void changeAlotOfThing(AnotherService anotherService, ThingType thingType) {
+	private static void flush(Service anotherService) {
 		System.out.println("change " + ThingType.MESSAGE);
-		anotherService.changeALotOfThing("WC13712356697787927", "Message", thingType);
+		anotherService.flushAllCaches();
 		
 		line();
 	}
 
-	private static void getComments(AnotherService someService) {
+	private static void getComments(Service someService) {
 		System.out.println("get " + ThingType.COMMENT);
 		InfoResponse infoResponse = someService.getSomething(ThingType.COMMENT);
 		
@@ -76,7 +82,7 @@ public class SomeController {
 		line();
 	}
 
-	private static void getMessage(AnotherService someService) {
+	private static void getMessage(Service someService) {
 		System.out.println("get " + ThingType.MESSAGE);
 		InfoResponse infoResponse = someService.getSomething(ThingType.MESSAGE);
 

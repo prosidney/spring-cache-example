@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 
-import com.springcacheexample.service.AnotherService;
+import com.springcacheexample.service.Service;
 
 @Configuration
 @EnableCaching
@@ -17,8 +17,8 @@ public class EnableCachingConfig {
 	
 	
 	@Bean
-	public AnotherService anotherService() {
-		return new AnotherService();
+	public Service anotherService() {
+		return new Service();
 	}
 	
 	@Bean
@@ -36,7 +36,7 @@ public class EnableCachingConfig {
 		cacheManagerFactoryBean.setShared(true);
 		
 		//InputStream resourceAsStream = EnableCachingConfig.class.getResourceAsStream("/ehcache.xml");
-		File file = new File("C:\\workspaces\\workspace\\spring-cache-example\\src\\main\\resources\\ehcache.xml");
+		File file = new File("C:\\Users\\Acer\\git\\spring-cache-example\\src\\main\\resources\\ehcache.xml");
 		cacheManagerFactoryBean.setConfigLocation(new FileSystemResource(file));
 
 		return cacheManagerFactoryBean;

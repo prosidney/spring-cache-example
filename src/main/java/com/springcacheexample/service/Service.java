@@ -5,12 +5,13 @@ import java.util.Collection;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 
 import com.springcacheexample.model.InfoResponse;
 import com.springcacheexample.model.Thing;
 import com.springcacheexample.model.ThingType;
 
-public class AnotherService {
+public class Service {
 	
 	private static InfoResponse infoResponse = new InfoResponse();
 	
@@ -38,15 +39,15 @@ public class AnotherService {
 	
 
 	//@CacheEvict(value="test", key="#rating.podcastId")    
-	@CacheEvict(value="test", key="#thingType")    
-	public InfoResponse changeSomething(String content, ThingType thingType){
+	@CacheEvict(value="test", key="#thing.type")    
+	public InfoResponse changeSomething(String content, Thing thing){
 		if(infoResponse.getThings() == null){
 			infoResponse.setThings(new ArrayList<Thing>());
 		}
 		
 		Thing e = new Thing();
 		e.setContent(content);
-		e.setType(thingType);
+		e.setType(thing.getType());
 		
 		infoResponse.getThings().add(e);
 		
@@ -54,10 +55,14 @@ public class AnotherService {
 		return infoResponse;
 	}
 	
-	@CacheEvict(value="test", allEntries = true)    
-	public InfoResponse changeALotOfThing(String contextId, String content, ThingType thingType){
-		System.out.println("changeALotOfThing>>");
-		
-		return infoResponse;
+	@Caching(evict = {
+/*			@CacheEvict(value="referenceData", allEntries=true),
+			@CacheEvict(value="podcasts", allEntries=true),
+			@CacheEvict(value="searchResults", allEntries=true),
+			@CacheEvict(value="newestAndRecommendedPodcasts", allEntries=true),*/
+			@CacheEvict(value="test", allEntries=true)		    
+		})	
+	public void flushAllCaches() {
+		System.out.println("All caches have been completely flushed");		
 	}
 }
